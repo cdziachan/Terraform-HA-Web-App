@@ -21,7 +21,7 @@ resource "aws_launch_configuration" "web_lc" {
   name            = "web_launch_config"
   image_id        = data.aws_ami.amazon_linux_2.id
   instance_type   = var.web_instance
-  security_groups = module.network_stack.web_sg_id
+  security_groups = [module.network_stack.web_sg_id]
   #user_data = file("user_data.sh")
 
   lifecycle {
@@ -36,7 +36,7 @@ resource "aws_autoscaling_group" "web_asg" {
   max_size             = 5
   min_elb_capacity     = 2
   health_check_type    = "ELB"
-  load_balancers       = aws_elb.web_elb.name
+  load_balancers       = [aws_elb.web_elb.name]
   vpc_zone_identifier  = module.network_stack.public_subnet_ids
   lifecycle {
     create_before_destroy = true
@@ -45,7 +45,7 @@ resource "aws_autoscaling_group" "web_asg" {
 
 resource "aws_elb" "web_elb" {
   name               = "web-elb"
-  availability_zones = module.network_stack.availability_zones
+  availability_zones = ["module.network_stack.availability_zones"]
   security_groups    = [module.network_stack.web_sg_id]
   listener {
     instance_port     = 80
