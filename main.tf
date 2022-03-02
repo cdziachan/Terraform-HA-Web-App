@@ -1,3 +1,12 @@
+terraform{
+  required_providers {
+    aws = {
+    source = "hashicorp/aws"
+    version = "3.63"
+    }
+  }
+}
+
 provider "aws" {
   region = var.aws_region
 }
@@ -45,7 +54,7 @@ resource "aws_autoscaling_group" "web_asg" {
 
 resource "aws_elb" "web_elb" {
   name               = "web-elb"
-  availability_zones = ["module.network_stack.availability_zones"]
+  availability_zones = ["module.network_stack.availability_zones[*]"]
   security_groups    = [module.network_stack.web_sg_id]
   listener {
     instance_port     = 80
