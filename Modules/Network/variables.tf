@@ -16,6 +16,14 @@ variable "private_subnet_cidrs" {
   ]
 }
 
+variable "azs" {
+
+  default = [
+    "us-west-1b",
+    "us-west-1c"
+  ]
+}
+
 variable "tags" {
   description = "mutual tags to be shared amongst resources in the repo"
   type        = map(any)
