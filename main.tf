@@ -27,7 +27,7 @@ data "aws_ami" "amazon_linux_2" {
 }
 #-------------------------------------------------------------------------------
 resource "aws_launch_configuration" "web_lc" {
-  name            = "web_launch_config"
+  name_prefix     = "web-launch-config-"
   image_id        = data.aws_ami.amazon_linux_2.id
   instance_type   = var.web_instance
   security_groups = [module.network_stack.web_sg_id]
@@ -39,7 +39,7 @@ resource "aws_launch_configuration" "web_lc" {
 }
 
 resource "aws_autoscaling_group" "web_asg" {
-  name                 = "web_autoscaling_group"
+  name                 = "ASG-${aws_launch_configuration.web_lc.name}"
   launch_configuration = aws_launch_configuration.web_lc.name
   min_size             = 2
   max_size             = 4
