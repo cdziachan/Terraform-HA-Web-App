@@ -1,8 +1,8 @@
-terraform{
+terraform {
   required_providers {
     aws = {
-    source = "hashicorp/aws"
-    version = "3.63"
+      source  = "hashicorp/aws"
+      version = "3.63"
     }
   }
 }
@@ -42,20 +42,21 @@ resource "aws_autoscaling_group" "web_asg" {
   name                 = "web_autoscaling_group"
   launch_configuration = aws_launch_configuration.web_lc.name
   min_size             = 2
-  max_size             = 5
-  min_elb_capacity     = 2
+  max_size             = 4
+  desired_capacity     = 3
   health_check_type    = "ELB"
   load_balancers       = [aws_elb.web_elb.name]
   vpc_zone_identifier  = module.network_stack.public_subnet_ids
+
   lifecycle {
     create_before_destroy = true
   }
 }
 
 resource "aws_elb" "web_elb" {
-  name               = "web-elb"
-  availability_zones = ["module.network_stack.availability_zones[*]"]
-  security_groups    = [module.network_stack.web_sg_id]
+  name            = "web-elb"
+  subnets         = module.network_stack.public_subnet_ids
+  security_groups = [module.network_stack.web_sg_id]
   listener {
     instance_port     = 80
     instance_protocol = "http"
@@ -65,8 +66,8 @@ resource "aws_elb" "web_elb" {
   health_check {
     healthy_threshold   = 2
     unhealthy_threshold = 2
-    timeout             = 10
+    timeout             = 3
     target              = "HTTP:80/"
-    interval            = 30
+    interval            = 10
   }
 }
