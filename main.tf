@@ -31,7 +31,7 @@ resource "aws_launch_configuration" "web_lc" {
   image_id        = data.aws_ami.amazon_linux_2.id
   instance_type   = var.web_instance
   security_groups = [module.network_stack.web_sg_id]
-  #user_data = file("user_data.sh")
+  user_data = file("user_data.sh")
 
   lifecycle {
     create_before_destroy = true
