@@ -11,6 +11,14 @@ provider "aws" {
   region = var.aws_region
 }
 
+terraform {
+  backend "s3" {
+    bucket = "your-flavor-of-s3-bucket"
+    key    = "prod/network/terraform.tfstate"
+    region = "us-west-1"
+  }
+}
+
 module "network_stack" {
   source = "./Modules/Network"
 }
