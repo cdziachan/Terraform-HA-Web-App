@@ -27,7 +27,7 @@ data "aws_ami" "amazon_linux_2" {
 }
 #-------------------------------------------------------------------------------
 resource "aws_launch_configuration" "web_lc" {
-  name_prefix     = "web-launch-config-"
+  name_prefix     = "Web-Launch-Config-"
   image_id        = data.aws_ami.amazon_linux_2.id
   instance_type   = var.web_instance
   security_groups = [module.network_stack.web_sg_id]
@@ -54,7 +54,7 @@ resource "aws_autoscaling_group" "web_asg" {
 }
 
 resource "aws_elb" "web_elb" {
-  name            = "web-elb"
+  name            = "Web-ELB"
   subnets         = module.network_stack.public_subnet_ids
   security_groups = [module.network_stack.web_sg_id]
   listener {
